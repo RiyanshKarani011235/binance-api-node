@@ -13,7 +13,8 @@ const depth = (payload, cb) => {
         e: eventType,
         E: eventTime,
         s: symbol,
-        u: updateId,
+        u: finalUpdateId,
+        U: firstUpdateId,
         b: bidDepth,
         a: askDepth,
       } = JSON.parse(msg)
@@ -22,7 +23,8 @@ const depth = (payload, cb) => {
         eventType,
         eventTime,
         symbol,
-        updateId,
+        firstUpdateId,
+        finalUpdateId,
         bidDepth: bidDepth.map(b => zip(['price', 'quantity'], b)),
         askDepth: askDepth.map(a => zip(['price', 'quantity'], a)),
       })

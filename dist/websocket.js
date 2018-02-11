@@ -33,7 +33,8 @@ var depth = function depth(payload, cb) {
           eventType = _JSON$parse.e,
           eventTime = _JSON$parse.E,
           symbol = _JSON$parse.s,
-          updateId = _JSON$parse.u,
+          finalUpdateId = _JSON$parse.u,
+          firstUpdateId = _JSON$parse.U,
           bidDepth = _JSON$parse.b,
           askDepth = _JSON$parse.a;
 
@@ -41,7 +42,8 @@ var depth = function depth(payload, cb) {
         eventType: eventType,
         eventTime: eventTime,
         symbol: symbol,
-        updateId: updateId,
+        firstUpdateId: firstUpdateId,
+        finalUpdateId: finalUpdateId,
         bidDepth: bidDepth.map(function (b) {
           return (0, _lodash2.default)(['price', 'quantity'], b);
         }),
