@@ -24,6 +24,7 @@ declare module 'binance-api-node' {
 
     export interface Binance {
         accountInfo(): Promise<Account>;
+        exchangeInfo(): Promise<ExchangeInfo>;
         order(options: NewOrder): Promise<Order>;
         prices(): Promise<{ [index: string]: string }>;
         time(): Promise<number>;
@@ -39,6 +40,43 @@ declare module 'binance-api-node' {
         trades: (pairs: string[], callback: (trade: Trade) => void) => Function;
         user: ( callback: (msg: OutboundAccountInfo|ExecutionReport) => void) => Function;
     }
+
+    export interface RateLimit {
+        rateLimitType: string,
+        interval: string,
+        limit: number
+    }
+
+    export interface ExchangeInfo {
+        timezone: string,
+        serverTime: number,
+        rateLimits: RateLimit[],
+        exchangeFilters: [],
+        symbols: {
+            symbol: string,
+            status: string,
+            baseAsset:string,
+            baseAssetPrecision: number,
+            quoteAsset: string,
+            quotePrecision: number,
+            orderTypes: OrderType[],
+            icebergAllowed: boolean,
+            filters: [?{
+              "filterType": "PRICE_FILTER",
+              "minPrice": string,
+              "maxPrice": string,
+              "tickSize": string,
+            }, ?{
+              "filterType": "LOT_SIZE",
+              "minQty": string,
+              "maxQty": string,
+              "stepSize": string,
+            }, ?{
+              "filterType": "MIN_NOTIONAL",
+              "minNotional": string
+            }]
+          }[]
+      }
 
     export interface NewOrder {
         icebergQty?: string;
