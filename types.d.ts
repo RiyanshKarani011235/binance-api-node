@@ -51,6 +51,7 @@ declare module 'binance-api-node' {
         symbol: string;
         timeInForce?: TimeInForce;
         type: OrderType;
+        /* TODO add new_order_response_type and build an interface for response type */
     }
 
     interface OrderFill {
@@ -115,7 +116,8 @@ declare module 'binance-api-node' {
         eventType: string;
         eventTime: number;
         symbol: string;
-        updateId: number;
+        firstUpdateId: number;
+        finalUpdateId: number;
         bidDepth: BidDepth[];
         askDepth: BidDepth[];
     }
