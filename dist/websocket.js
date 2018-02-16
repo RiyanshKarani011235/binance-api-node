@@ -26,7 +26,8 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 var BASE = 'wss://stream.binance.com:9443/ws';
 
 var depth = function depth(payload, cb) {
-  var cache = (Array.isArray(payload) ? payload : [payload]).forEach(function (symbol) {
+  var cache = [];
+  (Array.isArray(payload) ? payload : [payload]).forEach(function (symbol) {
     var w = new _ws2.default(BASE + '/' + symbol.toLowerCase() + '@depth');
     w.on('message', function (msg) {
       var _JSON$parse = JSON.parse(msg),
@@ -52,6 +53,8 @@ var depth = function depth(payload, cb) {
         })
       });
     });
+
+    cache.push(w);
   });
 
   return function () {

@@ -51,7 +51,7 @@ declare module 'binance-api-node' {
         timezone: string,
         serverTime: number,
         rateLimits: RateLimit[],
-        exchangeFilters: [],
+        exchangeFilters: object[],
         symbols: {
             symbol: string,
             status: string,
@@ -61,17 +61,17 @@ declare module 'binance-api-node' {
             quotePrecision: number,
             orderTypes: OrderType[],
             icebergAllowed: boolean,
-            filters: [?{
+            filters: [{
               "filterType": "PRICE_FILTER",
               "minPrice": string,
               "maxPrice": string,
               "tickSize": string,
-            }, ?{
+            }, {
               "filterType": "LOT_SIZE",
               "minQty": string,
               "maxQty": string,
               "stepSize": string,
-            }, ?{
+            }, {
               "filterType": "MIN_NOTIONAL",
               "minNotional": string
             }]
