@@ -52,31 +52,35 @@ declare module 'binance-api-node' {
         serverTime: number,
         rateLimits: RateLimit[],
         exchangeFilters: object[],
-        symbols: {
-            symbol: string,
-            status: string,
-            baseAsset:string,
-            baseAssetPrecision: number,
-            quoteAsset: string,
-            quotePrecision: number,
-            orderTypes: OrderType[],
-            icebergAllowed: boolean,
-            filters: [{
-              "filterType": "PRICE_FILTER",
-              "minPrice": string,
-              "maxPrice": string,
-              "tickSize": string,
-            }, {
-              "filterType": "LOT_SIZE",
-              "minQty": string,
-              "maxQty": string,
-              "stepSize": string,
-            }, {
-              "filterType": "MIN_NOTIONAL",
-              "minNotional": string
-            }]
-          }[]
+        symbols: SymbolInfo[]
       }
+
+      export interface SymbolInfo {
+        symbol: string,
+        status: string,
+        baseAsset:string,
+        baseAssetPrecision: number,
+        quoteAsset: string,
+        quotePrecision: number,
+        orderTypes: OrderType[],
+        icebergAllowed: boolean,
+        filters: [{
+          "filterType": "PRICE_FILTER",
+          "minPrice": string,
+          "maxPrice": string,
+          "tickSize": string,
+        }, {
+          "filterType": "LOT_SIZE",
+          "minQty": string,
+          "maxQty": string,
+          "stepSize": string,
+        }, {
+          "filterType": "MIN_NOTIONAL",
+          "minNotional": string
+        }]
+      }
+
+      
 
     export interface NewOrder {
         icebergQty?: string;
