@@ -26,42 +26,55 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 var BASE = 'wss://stream.binance.com:9443/ws';
 
 var depth = function depth(payload, cb) {
-  var cache = [];
-  (Array.isArray(payload) ? payload : [payload]).forEach(function (symbol) {
-    var w = new _ws2.default(BASE + '/' + symbol.toLowerCase() + '@depth');
-    w.on('message', function (msg) {
-      var _JSON$parse = JSON.parse(msg),
-          eventType = _JSON$parse.e,
-          eventTime = _JSON$parse.E,
-          symbol = _JSON$parse.s,
-          finalUpdateId = _JSON$parse.u,
-          firstUpdateId = _JSON$parse.U,
-          bidDepth = _JSON$parse.b,
-          askDepth = _JSON$parse.a;
+  return new Promise(function (fulfill, reject) {
+    var cache = [];
+    var count = 0;
+    var p = Array.isArray(payload) ? payload : [payload];
+    p.forEach(function (symbol) {
+      var w = new _ws2.default(BASE + '/' + symbol.toLowerCase() + '@depth');
+      cache.push(w);
 
-      cb({
-        eventType: eventType,
-        eventTime: eventTime,
-        symbol: symbol,
-        firstUpdateId: firstUpdateId,
-        finalUpdateId: finalUpdateId,
-        bidDepth: bidDepth.map(function (b) {
-          return (0, _lodash2.default)(['price', 'quantity'], b);
-        }),
-        askDepth: askDepth.map(function (a) {
-          return (0, _lodash2.default)(['price', 'quantity'], a);
-        })
+      w.on('open', function (msg) {
+        console.log('opennnnnnnn');
+        count++;
+        if (count === payload.length) fulfill(function () {
+          return cache.forEach(function (w) {
+            return w.close();
+          });
+        });
+      });
+
+      w.on('message', function (msg) {
+        var _JSON$parse = JSON.parse(msg),
+            eventType = _JSON$parse.e,
+            eventTime = _JSON$parse.E,
+            symbol = _JSON$parse.s,
+            finalUpdateId = _JSON$parse.u,
+            firstUpdateId = _JSON$parse.U,
+            bidDepth = _JSON$parse.b,
+            askDepth = _JSON$parse.a;
+
+        cb({
+          eventType: eventType,
+          eventTime: eventTime,
+          symbol: symbol,
+          firstUpdateId: firstUpdateId,
+          finalUpdateId: finalUpdateId,
+          bidDepth: bidDepth.map(function (b) {
+            return (0, _lodash2.default)(['price', 'quantity'], b);
+          }),
+          askDepth: askDepth.map(function (a) {
+            return (0, _lodash2.default)(['price', 'quantity'], a);
+          })
+        });
+      });
+
+      w.on('error', function (msg) {
+        console.log;
+        reject(msg);
       });
     });
-
-    cache.push(w);
   });
-
-  return function () {
-    return cache.forEach(function (w) {
-      return w.close();
-    });
-  };
 };
 
 var partialDepth = function partialDepth(payload, cb) {

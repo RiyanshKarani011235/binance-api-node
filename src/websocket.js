@@ -6,35 +6,48 @@ import httpMethods from 'http'
 const BASE = 'wss://stream.binance.com:9443/ws'
 
 const depth = (payload, cb) => {
-  const cache = [];
-  (Array.isArray(payload) ? payload : [payload]).forEach(symbol => {
-    const w = new WebSocket(`${BASE}/${symbol.toLowerCase()}@depth`)
-    w.on('message', msg => {
-      const {
-        e: eventType,
-        E: eventTime,
-        s: symbol,
-        u: finalUpdateId,
-        U: firstUpdateId,
-        b: bidDepth,
-        a: askDepth,
-      } = JSON.parse(msg)
+  return new Promise((fulfill, reject) => {
+    const cache = [];
+    let count = 0;
+    let p = Array.isArray(payload) ? payload : [payload];
+    (p).forEach(symbol => {
+      const w = new WebSocket(`${BASE}/${symbol.toLowerCase()}@depth`)
+      cache.push(w);
 
-      cb({
-        eventType,
-        eventTime,
-        symbol,
-        firstUpdateId,
-        finalUpdateId,
-        bidDepth: bidDepth.map(b => zip(['price', 'quantity'], b)),
-        askDepth: askDepth.map(a => zip(['price', 'quantity'], a)),
-      })
+      w.on('open', msg => {
+        console.log('opennnnnnnn');
+        count++;
+        if (count === payload.length) fulfill(() => cache.forEach(w => w.close()));
+      });
+
+      w.on('message', msg => {
+        const {
+          e: eventType,
+          E: eventTime,
+          s: symbol,
+          u: finalUpdateId,
+          U: firstUpdateId,
+          b: bidDepth,
+          a: askDepth,
+        } = JSON.parse(msg)
+
+        cb({
+          eventType,
+          eventTime,
+          symbol,
+          firstUpdateId,
+          finalUpdateId,
+          bidDepth: bidDepth.map(b => zip(['price', 'quantity'], b)),
+          askDepth: askDepth.map(a => zip(['price', 'quantity'], a)),
+        })
+      });
+
+      w.on('error', msg => {
+        console.log
+        reject(msg);
+      });
     })
-
-    cache.push(w);
-  })
-
-  return () => cache.forEach(w => w.close())
+  });
 }
 
 const partialDepth = (payload, cb) => {
