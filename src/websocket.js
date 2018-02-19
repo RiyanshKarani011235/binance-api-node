@@ -15,9 +15,12 @@ const depth = (payload, cb) => {
       cache.push(w);
 
       w.on('open', msg => {
-        console.log('opennnnnnnn');
         count++;
-        if (count === payload.length) fulfill(() => cache.forEach(w => w.close()));
+        if (count === p.length) {
+          fulfill(() => {
+            cache.forEach(w => w.close())
+          });
+        }
       });
 
       w.on('message', msg => {
