@@ -35,13 +35,14 @@ var depth = function depth(payload, cb) {
       cache.push(w);
 
       w.on('open', function (msg) {
-        console.log('opennnnnnnn');
         count++;
-        if (count === payload.length) fulfill(function () {
-          return cache.forEach(function (w) {
-            return w.close();
+        if (count === p.length) {
+          fulfill(function () {
+            cache.forEach(function (w) {
+              return w.close();
+            });
           });
-        });
+        }
       });
 
       w.on('message', function (msg) {
