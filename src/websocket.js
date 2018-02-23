@@ -5,6 +5,13 @@ import httpMethods from 'http'
 
 const BASE = 'wss://stream.binance.com:9443/ws'
 
+// TODO: rewrite all websocket functions to return a promise
+// instead of just returning a callback. The promise should be
+// resolved (with the callback as the return value) only when 
+// the websocket connection is established.
+// If the connection could not be established, the promise
+// should be rejected.
+
 const depth = (payload, cb) => {
   return new Promise((fulfill, reject) => {
     const cache = [];
